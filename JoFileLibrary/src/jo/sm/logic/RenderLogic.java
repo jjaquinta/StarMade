@@ -1,15 +1,21 @@
 package jo.sm.logic;
 
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import javax.swing.ImageIcon;
 
 import jo.sm.data.BlockTypes;
 import jo.sm.data.CubeIterator;
 import jo.sm.data.RenderTile;
 import jo.sm.data.SparseMatrix;
 import jo.sm.ship.data.Block;
+import jo.sm.ui.BlockTypeColors;
 import jo.vecmath.Matrix3f;
 import jo.vecmath.Matrix4f;
 import jo.vecmath.Point3f;
@@ -351,4 +357,179 @@ public class RenderLogic
         showing[axis] = xp.z < 0;
         showing[naxis] = !showing[axis];
     }
-}
+    
+    public static void draw(Graphics2D g2, List<RenderTile> tiles, Point3f unitX, Point3f unitY, Point3f unitZ)
+    {
+        float[][] corners = new float[4][2];
+        for (RenderTile tile : tiles)
+        {
+            Point3f corner = tile.getVisual();
+            if (corner == null)
+                break;
+            if (!getCorners(tile, corner, corners, unitX, unitY, unitZ))
+                continue;
+            if (tile.getType() == RenderTile.SQUARE)
+                renderSquare(g2, corners, tile, BlockTypeColors.getBlockImage(tile.getBlock().getBlockID()));
+            else if ((tile.getType() >= RenderTile.TRI1) && (tile.getType() <= RenderTile.TRI4))
+                renderTriangle(g2, corners, tile, BlockTypeColors.getWedgeImage(tile.getBlock().getBlockID()));
+            else if ((tile.getType() == RenderTile.RECTANGLE))
+                renderSquare(g2, corners, tile, BlockTypeColors.getBlockImage(tile.getBlock().getBlockID()));
+        }
+        
+    }
+
+    private static void renderTriangle(Graphics2D g2, float[][] corners,
+            RenderTile tile, ImageIcon icon)
+    {
+        //System.out.println("Render triangle "+tile.getType());
+        int pCenter = (tile.getType() - RenderTile.TRI1);
+        int pLeft = (pCenter + 1)%4;
+        int pRight = (pCenter + 3)%4;
+        if (icon != null)
+        {
+            float m00 = (corners[pRight][0] - corners[pCenter][0])/64f;
+            float m10 = (corners[pRight][1] - corners[pCenter][1])/64f;
+            float m01 = (corners[pLeft][0] - corners[pCenter][0])/64f;
+            float m11 = (corners[pLeft][1] - corners[pCenter][1])/64f;
+            float m02 = corners[pCenter][0];
+            float m12 = corners[pCenter][1];
+            AffineTransform t = new AffineTransform(m00, m10, m01, m11, m02, m12);
+            g2.drawImage(icon.getImage(), t, null);
+        }
+        else
+        {
+            Path2D p = new Path2D.Float();
+            p.moveTo(corners[pCenter][0], corners[pCenter][1]);
+            p.lineTo(corners[pLeft][0], corners[pLeft][1]);
+            p.lineTo(corners[pRight][0], corners[pRight][1]);
+            p.lineTo(corners[pCenter][0], corners[pCenter][1]);
+            g2.setPaint(BlockTypeColors.getFillColor(tile.getBlock().getBlockID()));
+            g2.fill(p);
+            g2.setPaint(BlockTypeColors.getOutlineColor(tile.getBlock().getBlockID()));
+            g2.draw(p);
+        }
+    }
+
+    private static void renderSquare(Graphics2D g2, float[][] corners,
+            RenderTile tile, ImageIcon icon)
+    {
+        if (icon != null)
+        {
+            float m00 = (corners[1][0] - corners[0][0])/64f;
+            float m10 = (corners[1][1] - corners[0][1])/64f;
+            float m01 = (corners[3][0] - corners[0][0])/64f;
+            float m11 = (corners[3][1] - corners[0][1])/64f;
+            float m02 = corners[0][0];
+            float m12 = corners[0][1];
+            AffineTransform t = new AffineTransform(m00, m10, m01, m11, m02, m12);
+            g2.drawImage(icon.getImage(), t, null);
+        }
+        else
+        {
+            Path2D p = new Path2D.Float();
+            p.moveTo(corners[0][0], corners[0][1]);
+            p.lineTo(corners[1][0], corners[1][1]);
+            p.lineTo(corners[2][0], corners[2][1]);
+            p.lineTo(corners[3][0], corners[3][1]);
+            p.lineTo(corners[0][0], corners[0][1]);
+            g2.setPaint(BlockTypeColors.getFillColor(tile.getBlock().getBlockID()));
+            g2.fill(p);
+            g2.setPaint(BlockTypeColors.getOutlineColor(tile.getBlock().getBlockID()));
+            g2.draw(p);
+        }
+    }
+
+    public static boolean getCorners(RenderTile tile, Point3f corner, float[][] corners, 
+            Point3f unitX, Point3f unitY, Point3f unitZ)
+    {
+        switch (tile.getFacing())
+        {
+            case RenderTile.XP:
+            case RenderTile.XM:
+                setCorner(corners, corner, 0, false, false, false, unitX, unitY, unitZ);
+                setCorner(corners, corner, 1, false, true , false, unitX, unitY, unitZ);
+                setCorner(corners, corner, 2, false, true , true , unitX, unitY, unitZ);
+                setCorner(corners, corner, 3, false, false, true , unitX, unitY, unitZ);
+                break;
+            case RenderTile.YP:
+            case RenderTile.YM:
+                setCorner(corners, corner, 0, false, false, false, unitX, unitY, unitZ);
+                setCorner(corners, corner, 1, false, false, true , unitX, unitY, unitZ);
+                setCorner(corners, corner, 2, true , false, true , unitX, unitY, unitZ);
+                setCorner(corners, corner, 3, true , false, false, unitX, unitY, unitZ);
+                break;
+            case RenderTile.ZP:
+            case RenderTile.ZM:
+                setCorner(corners, corner, 0, false, false, false, unitX, unitY, unitZ);
+                setCorner(corners, corner, 1, true , false, false, unitX, unitY, unitZ);
+                setCorner(corners, corner, 2, true , true , false, unitX, unitY, unitZ);
+                setCorner(corners, corner, 3, false, true , false, unitX, unitY, unitZ);
+                break;
+            case RenderTile.XPYP:
+            case RenderTile.XMYM:
+                setDiagonalCorners(corners, corner, false, true , false, false, true , true , unitX, unitY, unitZ);
+                break;
+            case RenderTile.XPYM:
+            case RenderTile.XMYP:
+                setDiagonalCorners(corners, corner, true , true , false, true , true , true , unitX, unitY, unitZ);
+                break;
+                case RenderTile.YPZM:
+              case RenderTile.YMZP:
+                  setDiagonalCorners(corners, corner, false, false, false, true , false, false, unitX, unitY, unitZ);
+                  break;
+              case RenderTile.YPZP:
+              case RenderTile.YMZM:
+                  setDiagonalCorners(corners, corner, false, false, true , true , false, true , unitX, unitY, unitZ);
+                  break;
+              case RenderTile.ZPXP:
+              case RenderTile.ZMXM:
+                  setDiagonalCorners(corners, corner, false, false, true , true , false, false, unitX, unitY, unitZ);
+                  break;
+              case RenderTile.ZPXM:
+              case RenderTile.ZMXP:
+                  setDiagonalCorners(corners, corner, true, true, true , true , false, true, unitX, unitY, unitZ);
+                  break;
+            default:
+                return false;
+        }
+        return true;
+    }
+    
+    private static void setDiagonalCorners(float[][] corners, Point3f corner, 
+            boolean x0, boolean y0, boolean z0, 
+            boolean x1, boolean y1, boolean z1, 
+            Point3f unitX, Point3f unitY, Point3f unitZ)
+    {
+        boolean x2 = (x0 == x1) ? !x1 : x1;
+        boolean x3 = (x1 == x2) ? !x2 : x2;
+        boolean y2 = (y0 == y1) ? !y1 : y1;
+        boolean y3 = (y1 == y2) ? !y2 : y2;
+        boolean z2 = (z0 == z1) ? !z1 : z1;
+        boolean z3 = (z1 == z2) ? !z2 : z2;
+        setCorner(corners, corner, 0, x0, y0, z0, unitX, unitY, unitZ);
+        setCorner(corners, corner, 1, x1, y1, z1, unitX, unitY, unitZ);
+        setCorner(corners, corner, 2, x2, y2, z2, unitX, unitY, unitZ);
+        setCorner(corners, corner, 3, x3, y3, z3, unitX, unitY, unitZ);
+    }
+    
+    private static void setCorner(float[][] corners, Point3f corner, int off, boolean x, boolean y, boolean z, Point3f unitX, Point3f unitY, Point3f unitZ)
+    {
+        corners[off][0] = corner.x;
+        corners[off][1] = corner.y;
+        if (x)
+        {
+            corners[off][0] += unitX.x;
+            corners[off][1] += unitX.y;
+        }
+        if (y)
+        {
+            corners[off][0] += unitY.x;
+            corners[off][1] += unitY.y;
+        }
+        if (z)
+        {
+            corners[off][0] += unitZ.x;
+            corners[off][1] += unitZ.y;
+        }
+    }
+  }

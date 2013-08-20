@@ -8,7 +8,6 @@ import java.util.List;
 
 import jo.sm.data.Entity;
 import jo.sm.data.StarMade;
-import jo.sm.ent.cmd.DumpEntityFile;
 import jo.sm.ent.data.Tag;
 import jo.sm.ent.logic.TagLogic;
 import jo.sm.ship.logic.DataLogic;

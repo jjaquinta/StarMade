@@ -22,6 +22,7 @@ import jo.sm.mods.IBlocksPlugin;
 import jo.sm.ui.act.edit.HardenAction;
 import jo.sm.ui.act.edit.SmoothAction;
 import jo.sm.ui.act.edit.SoftenAction;
+import jo.sm.ui.act.file.ExportImagesAction;
 import jo.sm.ui.act.file.OpenExistingAction;
 import jo.sm.ui.act.file.OpenFileAction;
 import jo.sm.ui.act.file.QuitAction;
@@ -61,6 +62,7 @@ public class RenderFrame extends JFrame implements WindowListener
         menuFile.add(new OpenExistingAction(this));
         menuFile.add(new OpenFileAction(this));
         menuFile.add(new SaveAction(this));
+        menuFile.add(new ExportImagesAction(this));
         menuFile.add(new QuitAction(this));
         menuBar.add(menuEdit);
         menuEdit.add(new SmoothAction(this));

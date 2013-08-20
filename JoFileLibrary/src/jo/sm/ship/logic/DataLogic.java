@@ -118,8 +118,8 @@ public class DataLogic
                 for (int x = 0; x < 16; x++)
                 {
                     int off = offsetSizeTable[x][y][z][0];
-                    int siz = offsetSizeTable[x][y][z][1];
-                    long ts = timestampTable[x][y][z];
+                    //int siz = offsetSizeTable[x][y][z][1];
+                    //long ts = timestampTable[x][y][z];
                     if (off < 0)
                         continue;
 //                    System.out.print(off+" x"+siz+" ");
