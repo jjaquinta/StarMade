@@ -115,6 +115,14 @@ public class SparseMatrix<T>
         return new NonNullIterator();
     }
     
+    public int size()
+    {
+        int size = 0;
+        for (Iterator<Point3i> i = iteratorNonNull(); i.hasNext(); i.next())
+            size++;
+        return size;
+    }
+    
     class NonNullIterator implements Iterator<Point3i>
     {
         private Iterator<Point3i> mRootIterator;

@@ -27,6 +27,14 @@ public class DraftImageLogic
         String space = "_";
         if (name.indexOf(" ") >= 0)
             space = " ";
+        Point3i lower = new Point3i();
+        Point3i upper = new Point3i();
+        grid.getBounds(lower, upper);
+        int shipWidth = upper.x - lower.x + 1;
+        int shipHeight = upper.z - lower.z + 1;
+        int shipDepth = upper.y - lower.y + 1;
+        int shipMass = grid.size();
+
         BufferedImage contactSheet = new BufferedImage(size.width,  size.height, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics g = contactSheet.getGraphics();
         BufferedImage img;
@@ -46,7 +54,17 @@ public class DraftImageLogic
         img = saveDraftImage(new File(dir, name+space+"iso.png"), size, grid, 1.125f*(float)Math.PI, 0.125f*(float)Math.PI);
         g.drawImage(img, size.width*2/3, size.height*2/3, size.width*3/3, size.height*3/3, 0, 0, size.width, size.height, null);
         
-        g.drawString(name, size.width/3/4, size.height/3/2);
+        int dy = g.getFontMetrics().getHeight();
+        int y = dy*2;
+        g.drawString(name, size.width/3/4, y);
+        y += dy;
+        g.drawString("Width: "+shipWidth, size.width/3/4, y);
+        y += dy;
+        g.drawString("Height: "+shipHeight, size.width/3/4, y);
+        y += dy;
+        g.drawString("Depth: "+shipDepth, size.width/3/4, y);
+        y += dy;
+        g.drawString("Mass: "+shipMass, size.width/3/4, y);
 
         g.dispose();
         ImageIO.write(contactSheet, "PNG", new File(dir, name+space+"contact.png"));

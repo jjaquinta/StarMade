@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Desktop.Action;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -18,15 +19,17 @@ import javax.swing.JPanel;
 public class BegPanel extends JPanel
 {
     private static final int TICK = 200;
-    private static final int CHOP = 150;
+    private static final int CHOP = 120;
 
-    private static final String THE_RAIDERS_LAMENT = "http://podiobooks.com/title/the-raiders-lament";
+    private static final String THE_RAIDERS_LAMENT_AUDIO = "http://podiobooks.com/title/the-raiders-lament";
+    private static final String THE_RAIDERS_LAMENT = "https://www.smashwords.com/books/view/347157";
     
     private int mMessageOffset;
     private int mRepeats;
     
     private JLabel  mStatus;
-    private JButton mGoto;
+    private JButton mAudio;
+    private JButton mText;
     
     public BegPanel()
     {
@@ -34,23 +37,35 @@ public class BegPanel extends JPanel
         // instantiate
         mStatus = new JLabel(MESSAGE.substring(0, CHOP));
         setBackground(Color.cyan);
-        mGoto = new JButton("Go");
-        Dimension d = mGoto.getPreferredSize();
-        System.out.println("Goto size="+d);
-        mStatus.setPreferredSize(new Dimension(1024 - d.width, d.height));
+        mAudio = new JButton("Audiobook");
+        mText = new JButton("E-book");
+        Dimension d1 = mAudio.getPreferredSize();
+        Dimension d2 = mText.getPreferredSize();
+        mStatus.setPreferredSize(new Dimension(1024 - d1.width - d2.width, Math.max(d1.height, d2.height)));
         // layout
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         add("Center", mStatus);
-        add("East", mGoto);
+        JPanel buttons = new JPanel();
+        buttons.setLayout(new GridLayout(1, 2));
+        buttons.add(mAudio);
+        buttons.add(mText);
+        add("East", buttons);
         // link
         Thread t = new Thread("beg_ticker") { public void run() { doTicker(); } };
         t.setDaemon(true);
         t.start();
-        mGoto.addActionListener(new ActionListener(){
+        mText.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ev)
             {
-                doGoto();
+                doGoto(THE_RAIDERS_LAMENT);
+            }            
+        });
+        mText.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ev)
+            {
+                doGoto(THE_RAIDERS_LAMENT_AUDIO);
             }            
         });
     }
@@ -87,13 +102,13 @@ public class BegPanel extends JPanel
         }
     }
     
-    private void doGoto()
+    private void doGoto(String url)
     {
         if (Desktop.isDesktopSupported()) {
             Desktop desktop = Desktop.getDesktop();
             if (desktop.isSupported(Action.BROWSE))
                 try {
-                    desktop.browse(URI.create(THE_RAIDERS_LAMENT));
+                    desktop.browse(URI.create(url));
                     return;
                 } catch (IOException e) {
                     // handled below
@@ -104,12 +119,12 @@ public class BegPanel extends JPanel
     private static final String MESSAGE = "This software is made freely available with no charge or limitation. "
             + "Even the source is included. "
             + "It is distributed as \"begware\", and here is the begging. "
-            + "If you like and use this software, please go and download my audiobook \"The Raider's Lament\". "
+            + "If you like and use this software, please go and download my book \"The Raider's Lament\". "
             + "It's a light hearted Sci-Fi novel that's a fun waste of time. "
-            + "You don't have to actually listen to it. "
+            + "You don't have to actually read/listen to it. "
             + "(The recording is not the best.) "
             + "Clocking up the downloads is appreciated. "
-            + "If you *really* like this software (or the story) there is a \"Donate\" button on the site. "
+            + "If you *really* like this software (or the story) you could buy or donate to it. "
             + "Proceeds will go towards buying my daughter the Minecraft Lego Kit! "
             + "                                                           ";
 }
