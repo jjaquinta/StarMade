@@ -1,5 +1,6 @@
 package jo.sm.ui.logic;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -8,6 +9,7 @@ import jo.sm.data.Entity;
 import jo.sm.data.SparseMatrix;
 import jo.sm.logic.BlueprintLogic;
 import jo.sm.logic.EntityLogic;
+import jo.sm.logic.StarMadeLogic;
 import jo.sm.mods.IBlocksPlugin;
 import jo.sm.ship.data.Block;
 import jo.sm.ship.data.Blueprint;
@@ -48,6 +50,9 @@ public class ShipTreeLogic
             spec.setClassification(IBlocksPlugin.TYPE_SHIP);
             spec.setName(name);
             spec.setClassification(IBlocksPlugin.TYPE_SHIP);
+            File bpDir = new File(StarMadeLogic.getInstance().getBaseDir(), def ? "blueprints-default" : "blueprints");
+            File baseDir = new File(bpDir, name);
+            spec.setFile(baseDir);
             DefaultMutableTreeNode option = new DefaultMutableTreeNode(spec);
             group.add(option);            
         }
