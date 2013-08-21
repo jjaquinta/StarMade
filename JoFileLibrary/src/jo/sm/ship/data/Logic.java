@@ -1,5 +1,8 @@
 package jo.sm.ship.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  +        start   type
  +        0       int                         unknown int
@@ -19,7 +22,12 @@ package jo.sm.ship.data;
 public class Logic
 {
     private int               mUnknown1;
-    private ControllerEntry[] mControllers;
+    private List<ControllerEntry> mControllers;
+    
+    public Logic()
+    {
+        mControllers = new ArrayList<ControllerEntry>();
+    }
     
     public int getUnknown1()
     {
@@ -29,11 +37,11 @@ public class Logic
     {
         mUnknown1 = unknown1;
     }
-    public ControllerEntry[] getControllers()
+    public List<ControllerEntry> getControllers()
     {
         return mControllers;
     }
-    public void setControllers(ControllerEntry[] controllers)
+    public void setControllers(List<ControllerEntry> controllers)
     {
         mControllers = controllers;
     }

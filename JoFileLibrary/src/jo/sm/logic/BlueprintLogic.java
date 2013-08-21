@@ -15,6 +15,7 @@ import jo.sm.ship.data.Block;
 import jo.sm.ship.data.Blueprint;
 import jo.sm.ship.data.Data;
 import jo.sm.ship.data.Header;
+import jo.sm.ship.data.Logic;
 import jo.sm.ship.logic.DataLogic;
 import jo.sm.ship.logic.HeaderLogic;
 import jo.sm.ship.logic.LogicLogic;
@@ -104,7 +105,9 @@ public class BlueprintLogic
             Header header = HeaderLogic.makeHeader(grid);
             File headerFile = new File(baseDir, "header.smbph");
             HeaderLogic.writeFile(header, new FileOutputStream(headerFile), true);
-            // logic file
+            Logic logic = LogicLogic.makeLogic(grid);
+            File logicFile = new File(baseDir, "logic.smbpl");
+            LogicLogic.writeFile(logic, new FileOutputStream(logicFile), true);
             // meta file
             // data file
             File dataDir = new File(baseDir, "DATA");

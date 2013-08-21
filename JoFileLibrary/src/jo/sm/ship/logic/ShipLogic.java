@@ -6,12 +6,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import jo.sm.data.BlockTypes;
 import jo.sm.data.CubeIterator;
 import jo.sm.data.SparseMatrix;
 import jo.sm.ship.data.Block;
 import jo.sm.ship.data.Chunk;
 import jo.sm.ship.data.Data;
 import jo.vecmath.Point3i;
+import jo.vecmath.Point3s;
 
 public class ShipLogic
 {
@@ -160,4 +162,46 @@ public class ShipLogic
         }
         return data;
     }
+    
+    
+    public static Point3i findCore(SparseMatrix<Block> grid)
+    {
+        Point3i p = new Point3i(8, 8, 8);
+        Block b = grid.get(p);
+        if ((b != null) && (b.getBlockID() == BlockTypes.CORE_ID))
+            return p;
+        return findFirstBlock(grid, BlockTypes.CORE_ID);
+    }
+    
+    public static Point3i findFirstBlock(SparseMatrix<Block> grid, short id)
+    {
+        List<Point3i> finds = findBlocks(grid, id, true);
+        if (finds.size() == 0)
+            return null;
+        else
+            return finds.get(0);
+    }
+    
+    public static List<Point3i> findBlocks(SparseMatrix<Block> grid, short id)
+    {
+        return findBlocks(grid, id, false);
+    }
+    
+    public static List<Point3i> findBlocks(SparseMatrix<Block> grid, short id, boolean stopAfterFirst)
+    {
+        List<Point3i> finds = new ArrayList<Point3i>();
+        for (Iterator<Point3i> i = grid.iteratorNonNull(); i.hasNext(); )
+        {
+            Point3i pp = i.next();
+            Block b = grid.get(pp);
+            if (b.getBlockID() == id)
+            {
+                finds.add(pp);
+                if (stopAfterFirst)
+                    break;
+            }
+        }
+        return finds;
+    }
+
 }

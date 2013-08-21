@@ -192,11 +192,18 @@ public class RenderFrame extends JFrame implements WindowListener
     {
         Properties props = loadProps();
         String home = props.getProperty("starmade.home", "");
-        home = JOptionPane.showInputDialog(null, "Enter in the home directory for StarMade", home);
-        if (home == null)
-            System.exit(0);
-        props.put("starmade.home", home);
-        saveProps(props);
+        if (!StarMadeLogic.isStarMadeDirectory(home))
+        {
+            home = System.getProperty("user.dir");
+            if (!StarMadeLogic.isStarMadeDirectory(home))
+            {
+                home = JOptionPane.showInputDialog(null, "Enter in the home directory for StarMade", home);
+                if (home == null)
+                    System.exit(0);
+            }
+            props.put("starmade.home", home);
+            saveProps(props);
+        }
         StarMadeLogic.setBaseDir(home);
     }
 

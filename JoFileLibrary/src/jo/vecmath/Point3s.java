@@ -73,6 +73,15 @@ package jo.vecmath;
       super(t1);
     }
 
+     /**
+      * Constructs and initializes a Point3i from the specified Tuple3i.
+      * @param t1 the Tuple3i containing the initialization x, y, and z
+      * data.
+      */
+      public Point3s(Tuple3i t1) {
+       super(t1);
+     }
+
 
     /**
      * Constructs and initializes a Point3i to (0,0,0).

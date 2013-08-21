@@ -94,6 +94,17 @@ package jo.vecmath;
       this.z = t1.z;
     }
 
+     /**
+      * Constructs and initializes a Tuple3i from the specified Tuple3i.
+      * @param t1 the Tuple3i containing the initialization x, y, and z
+      * data.
+      */
+      public Tuple3s(Tuple3i t1) {
+       this.x = (short)t1.x;
+       this.y = (short)t1.y;
+       this.z = (short)t1.z;
+     }
+
 
     /**
      * Constructs and initializes a Tuple3i to (0,0,0).

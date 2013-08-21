@@ -1047,4 +1047,26 @@ public class BlockTypes
             return true;
         return false;
     }
+    
+    public static Map<Short,Short> CONTROLLER_IDS = new HashMap<Short,Short>();
+    static
+    {
+        CONTROLLER_IDS.put(SALVAGE_CONTROLLER_ID, SALVAGE_ID);
+        CONTROLLER_IDS.put(WEAPON_CONTROLLER_ID, WEAPON_ID);
+        CONTROLLER_IDS.put(MISSILE_DUMB_CONTROLLER_ID, MISSILE_DUMB_ID);
+        CONTROLLER_IDS.put(MISSILE_HEAT_CONTROLLER_ID, MISSILE_HEAT_ID);
+        CONTROLLER_IDS.put(MISSILE_FAFO_CONTROLLER_ID, MISSILE_FAFO_ID);
+        CONTROLLER_IDS.put(REPAIR_CONTROLLER_ID, REPAIR_ID);
+        CONTROLLER_IDS.put(POWER_COIL_ID, POWER_ID);
+    }
+    
+    public static boolean isController(short id)
+    {
+        return CONTROLLER_IDS.containsKey(id);
+    }
+    
+    public static boolean isControllerForBlock(short controllerID, short blockID)
+    {
+        return CONTROLLER_IDS.containsKey(controllerID) && (blockID == CONTROLLER_IDS.get(controllerID));
+    }
 }

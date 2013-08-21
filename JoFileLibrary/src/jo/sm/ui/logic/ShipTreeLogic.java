@@ -13,6 +13,7 @@ import jo.sm.logic.StarMadeLogic;
 import jo.sm.mods.IBlocksPlugin;
 import jo.sm.ship.data.Block;
 import jo.sm.ship.data.Blueprint;
+import jo.sm.ship.logic.LogicLogic;
 import jo.sm.ship.logic.ShipLogic;
 
 public class ShipTreeLogic
@@ -121,6 +122,8 @@ public class ShipTreeLogic
             {
                 Blueprint blueprint = BlueprintLogic.readBlueprint(spec.getName());
                 SparseMatrix<Block> grid = ShipLogic.getBlocks(blueprint.getData());
+                
+                LogicLogic.dumpLogic(blueprint.getLogic(), grid);
                 return grid;
             }
             else if (spec.getType() == ShipSpec.DEFAULT_BLUEPRINT)

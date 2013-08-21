@@ -19,6 +19,12 @@ public class IOLogic
     {
         return new Point3s(dis.readShort(), dis.readShort(), dis.readShort());
     }
+    public static void writePoint3s(DataOutputStream dos, Point3s p) throws IOException
+    {
+        dos.writeShort(p.x);
+        dos.writeShort(p.y);
+        dos.writeShort(p.z);
+    }
     public static Point3i readPoint3i(DataInputStream dis) throws IOException
     {
         return new Point3i(dis.readInt(), dis.readInt(), dis.readInt());

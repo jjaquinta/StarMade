@@ -116,4 +116,13 @@ public class StarMadeLogic
         }
         return false;
     }
+
+    public static boolean isStarMadeDirectory(String dir)
+    {
+        File d = new File(dir);
+        if (!d.exists())
+            return false;
+        File smJar = new File(d, "StarMade.jar");
+        return smJar.exists();
+    }
 }

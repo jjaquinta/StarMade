@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import jo.vecmath.Point3i;
+import jo.vecmath.Point3s;
 
 public class SparseMatrix<T>
 {
@@ -57,6 +58,11 @@ public class SparseMatrix<T>
     }
     
     public T get(Point3i v)
+    {
+        return get(v.x, v.y, v.z);
+    }
+    
+    public T get(Point3s v)
     {
         return get(v.x, v.y, v.z);
     }
