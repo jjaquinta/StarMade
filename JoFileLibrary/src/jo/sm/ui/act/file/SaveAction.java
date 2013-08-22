@@ -2,6 +2,7 @@ package jo.sm.ui.act.file;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
@@ -45,7 +46,20 @@ public class SaveAction extends GenericAction
     
     private void doSaveFile()
     {
-        
+        File dataFile = mFrame.getSpec().getFile();
+        SparseMatrix<Block> grid = mFrame.getClient().getGrid();
+        Map<Point3i, Data> data = ShipLogic.getData(grid);
+        Data d = data.get(new Point3i());
+        if (d == null)
+            throw new IllegalArgumentException("No core element to ship!");
+        try
+        {
+            DataLogic.writeFile(d, new FileOutputStream(dataFile), true);
+        }
+        catch (IOException e)
+        {
+            throw new IllegalStateException("Cannot save to '"+mFrame.getSpec().getFile()+"'", e);
+        }
     }
     
     private void doSaveBlueprint(boolean def)

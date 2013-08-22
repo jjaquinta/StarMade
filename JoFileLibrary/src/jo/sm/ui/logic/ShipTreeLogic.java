@@ -122,12 +122,20 @@ public class ShipTreeLogic
             {
                 Blueprint blueprint = BlueprintLogic.readBlueprint(spec.getName());
                 SparseMatrix<Block> grid = ShipLogic.getBlocks(blueprint.getData());
+                System.out.println("Original:");
+                LogicLogic.dump(blueprint.getLogic(), grid);
+                System.out.println("Loopback:");
+                LogicLogic.dump(LogicLogic.make(grid), grid);
                 return grid;
             }
             else if (spec.getType() == ShipSpec.DEFAULT_BLUEPRINT)
             {
                 Blueprint blueprint = BlueprintLogic.readDefaultBlueprint(spec.getName());
                 SparseMatrix<Block> grid = ShipLogic.getBlocks(blueprint.getData());
+                System.out.println("Original:");
+                LogicLogic.dump(blueprint.getLogic(), grid);
+                System.out.println("Loopback:");
+                LogicLogic.dump(LogicLogic.make(grid), grid);
                 return grid;
             }
             else if (spec.getType() == ShipSpec.ENTITY)

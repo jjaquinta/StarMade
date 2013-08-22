@@ -102,6 +102,14 @@ public class BlueprintLogic
         {
             Map<Point3i, Data> data = ShipLogic.getData(grid);
             File baseDir = spec.getFile();
+            if (!baseDir.exists())
+            {
+                baseDir.mkdir();
+                if (def)
+                    StarMadeLogic.getInstance().setDefaultBlueprints(null);
+                else
+                    StarMadeLogic.getInstance().setBlueprints(null);
+            }
             // header file
             Header header = HeaderLogic.make(grid);
             File headerFile = new File(baseDir, "header.smbph");
@@ -114,6 +122,8 @@ public class BlueprintLogic
             MetaLogic.writeFile(meta, new FileOutputStream(metaFile), true);
             // data file
             File dataDir = new File(baseDir, "DATA");
+            if (!dataDir.exists())
+                dataDir.mkdir();
             DataLogic.writeFiles(data, dataDir, spec.getName());
         }
         catch (IOException e1)

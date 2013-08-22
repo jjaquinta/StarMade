@@ -13,7 +13,6 @@ import jo.sm.ship.data.Block;
 import jo.sm.ship.data.Chunk;
 import jo.sm.ship.data.Data;
 import jo.vecmath.Point3i;
-import jo.vecmath.Point3s;
 
 public class ShipLogic
 {

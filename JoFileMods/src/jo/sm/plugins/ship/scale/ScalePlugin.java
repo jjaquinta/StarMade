@@ -91,6 +91,8 @@ public class ScalePlugin implements IBlocksPlugin
                             if ((x != 0) || (y != 0) || (z != 0))
                             {
                                 Block newB = new Block(b);
+                                if (BlockTypes.isController(newB.getBlockID()))
+                                    newB.setBlockID(BlockTypes.CONTROLLER_IDS.get(newB.getBlockID()));
                                 modified.set(iPoint.x + x, iPoint.y + y, iPoint.z + z, newB);
                             }
             }
