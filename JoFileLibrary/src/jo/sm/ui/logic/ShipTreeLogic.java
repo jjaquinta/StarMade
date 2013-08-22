@@ -122,8 +122,6 @@ public class ShipTreeLogic
             {
                 Blueprint blueprint = BlueprintLogic.readBlueprint(spec.getName());
                 SparseMatrix<Block> grid = ShipLogic.getBlocks(blueprint.getData());
-                
-                LogicLogic.dumpLogic(blueprint.getLogic(), grid);
                 return grid;
             }
             else if (spec.getType() == ShipSpec.DEFAULT_BLUEPRINT)

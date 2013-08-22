@@ -3,6 +3,7 @@ package jo.sm.data;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import jo.sm.mods.IBlocksPlugin;
 
@@ -14,6 +15,7 @@ public class StarMade
     private List<Entity>    mEntities;
     private ClassLoader     mModLoader;
     private List<IBlocksPlugin> mBlocksPlugins;
+    private Properties      mProps;
     
     public StarMade()
     {
@@ -67,5 +69,15 @@ public class StarMade
     public void setBlocksPlugins(List<IBlocksPlugin> blocksPlugins)
     {
         mBlocksPlugins = blocksPlugins;
+    }
+
+    public Properties getProps()
+    {
+        return mProps;
+    }
+
+    public void setProps(Properties props)
+    {
+        mProps = props;
     }
 }

@@ -1,11 +1,14 @@
 package jo.sm.logic;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.jar.Manifest;
 
@@ -124,5 +127,48 @@ public class StarMadeLogic
             return false;
         File smJar = new File(d, "StarMade.jar");
         return smJar.exists();
+    }
+
+    public static Properties getProps()
+    {
+        if (getInstance().getProps() == null)
+        {
+            Properties p = new Properties();
+            File home = new File(System.getProperty("user.home"));
+            File props = new File(home, ".josm");
+            if (props.exists())
+            {
+                try
+                {
+                    FileInputStream fis = new FileInputStream(props);
+                    p.load(fis);
+                    fis.close();
+                }
+                catch (Exception e)
+                {
+                    
+                }
+            }
+            getInstance().setProps(p);
+        }
+        return getInstance().getProps();
+    }
+
+    public static void saveProps()
+    {
+        if (getInstance().getProps() == null)
+            return;
+        File home = new File(System.getProperty("user.home"));
+        File props = new File(home, ".josm");
+        try
+        {
+            FileWriter fos = new FileWriter(props);
+            getInstance().getProps().store(fos, "StarMade Utils defaults");
+            fos.close();
+        }
+        catch (Exception e)
+        {
+            
+        }
     }
 }

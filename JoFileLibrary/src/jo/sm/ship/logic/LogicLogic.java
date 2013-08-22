@@ -77,7 +77,7 @@ public class LogicLogic
             dos.close();
     }
     
-    public static Logic makeLogic(SparseMatrix<Block> grid)
+    public static Logic make(SparseMatrix<Block> grid)
     {
         Logic logic = new Logic();
         logic.setUnknown1(0);
@@ -136,7 +136,7 @@ public class LogicLogic
         return blocks;
     }
     
-    public static void dumpLogic(Logic logic, SparseMatrix<Block> grid)
+    public static void dump(Logic logic, SparseMatrix<Block> grid)
     {
         System.out.println("Logic, unknown="+logic.getUnknown1()+", #controllers="+logic.getControllers().size());
         for (ControllerEntry controller : logic.getControllers())

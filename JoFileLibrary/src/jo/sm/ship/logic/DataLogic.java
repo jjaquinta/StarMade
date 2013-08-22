@@ -30,7 +30,8 @@ public class DataLogic
     {
         Map<Point3i, Data> data = new HashMap<Point3i, Data>();
         for (File dataFile : dataDir.listFiles())
-            if (dataFile.getName().endsWith(".smd2") && dataFile.getName().startsWith(prefix))
+            if (dataFile.getName().endsWith(".smd2") && 
+                    (dataFile.getName().startsWith(prefix) || dataFile.getName().startsWith("ENTITY_SHIP_")))
             {
                 String[] parts = dataFile.getName().split("\\.");
                 Point3i position = new Point3i(Integer.parseInt(parts[1]),

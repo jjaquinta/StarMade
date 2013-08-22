@@ -18,9 +18,13 @@ import jo.sm.logic.StarMadeLogic;
 import jo.sm.mods.IBlocksPlugin;
 import jo.sm.ship.data.Block;
 import jo.sm.ship.data.Data;
+import jo.sm.ship.data.Header;
 import jo.sm.ship.data.Logic;
+import jo.sm.ship.data.Meta;
 import jo.sm.ship.logic.DataLogic;
+import jo.sm.ship.logic.HeaderLogic;
 import jo.sm.ship.logic.LogicLogic;
+import jo.sm.ship.logic.MetaLogic;
 import jo.sm.ship.logic.ShipLogic;
 import jo.sm.ui.RenderFrame;
 import jo.sm.ui.act.GenericAction;
@@ -42,7 +46,13 @@ public class OpenFileAction extends GenericAction
     @Override
     public void actionPerformed(ActionEvent ev)
     {
+        File dir;
+        if (StarMadeLogic.getProps().contains("open.file.dir"))
+            dir = new File(StarMadeLogic.getProps().getProperty("open.file.dir"));
+        else
+            dir = StarMadeLogic.getInstance().getBaseDir();
         JFileChooser chooser = new JFileChooser(StarMadeLogic.getInstance().getBaseDir());
+        chooser.setSelectedFile(dir);
         FileNameExtensionFilter filter1 = new FileNameExtensionFilter(
             "Starmade Ship File", "smd2");
         FileNameExtensionFilter filter2 = new FileNameExtensionFilter(
@@ -53,9 +63,13 @@ public class OpenFileAction extends GenericAction
         if(returnVal != JFileChooser.APPROVE_OPTION)
             return;
        File smb2 = chooser.getSelectedFile();
+       StarMadeLogic.getProps().setProperty("open.file.dir", smb2.getParent());
+       StarMadeLogic.saveProps();
        String name = smb2.getName();
        try
        {
+           Header header = null;
+           Meta meta = null;
            Logic logic = null;
            Map<Point3i, Data> data = new HashMap<Point3i, Data>();
            InputStream is = new FileInputStream(smb2);;
@@ -91,10 +105,12 @@ public class OpenFileAction extends GenericAction
                                    Integer.parseInt(parts[3]));
                            data.put(position, datum);
                        }
+                       else if (ename.equals(name+"/header.smbph"))
+                           header = HeaderLogic.readFile(zis, false);
                        else if (ename.equals(name+"/logic.smbpl"))
-                       {
                            logic = LogicLogic.readFile(zis, false);
-                       }
+                       else if (ename.equals(name+"/meta.smbpm"))
+                           meta = MetaLogic.readFile(zis, false);
                }
                zis.close();
            }
@@ -111,8 +127,6 @@ public class OpenFileAction extends GenericAction
            spec.setFile(smb2);
            mFrame.setSpec(spec);
            mFrame.getClient().setGrid(grid);
-           if (logic != null)
-               LogicLogic.dumpLogic(logic, grid);
        }
        catch (IOException e)
        {

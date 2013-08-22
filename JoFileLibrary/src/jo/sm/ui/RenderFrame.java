@@ -3,9 +3,6 @@ package jo.sm.ui;
 import java.awt.BorderLayout;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.util.List;
 import java.util.Properties;
 
@@ -151,46 +148,9 @@ public class RenderFrame extends JFrame implements WindowListener
         }
     }
     
-    private static Properties loadProps()
-    {
-        Properties p = new Properties();
-        File home = new File(System.getProperty("user.home"));
-        File props = new File(home, ".josm");
-        if (props.exists())
-        {
-            try
-            {
-                FileInputStream fis = new FileInputStream(props);
-                p.load(fis);
-                fis.close();
-            }
-            catch (Exception e)
-            {
-                
-            }
-        }
-        return p;
-    }
-    
-    private static void saveProps(Properties p)
-    {
-        File home = new File(System.getProperty("user.home"));
-        File props = new File(home, ".josm");
-        try
-        {
-            FileWriter fos = new FileWriter(props);
-            p.store(fos, "StarMade Utils defaults");
-            fos.close();
-        }
-        catch (Exception e)
-        {
-            
-        }
-    }
-    
     private static void preLoad()
     {
-        Properties props = loadProps();
+        Properties props = StarMadeLogic.getProps();
         String home = props.getProperty("starmade.home", "");
         if (!StarMadeLogic.isStarMadeDirectory(home))
         {
@@ -202,7 +162,7 @@ public class RenderFrame extends JFrame implements WindowListener
                     System.exit(0);
             }
             props.put("starmade.home", home);
-            saveProps(props);
+            StarMadeLogic.saveProps();
         }
         StarMadeLogic.setBaseDir(home);
     }

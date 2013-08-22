@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import jo.sm.data.BlockTypes;
 import jo.sm.data.SparseMatrix;
 import jo.sm.ship.data.Block;
 import jo.sm.ship.data.BlockEntry;
@@ -73,7 +74,14 @@ public class HeaderLogic
             dos.close();
 	}
 	
-	public static Header makeHeader(SparseMatrix<Block> grid)
+	public static void dump(Header header)
+	{
+	    System.out.println("Header "+header.getUpperBound()+" -- "+header.getLowerBound()+" (u1="+header.getUnknown1()+", u2="+header.getUnknown2()+")");
+	    for (BlockEntry entry : header.getManifest())
+	        System.out.println("  "+entry.getBlockQuantity()+"x "+BlockTypes.BLOCK_NAMES.get(entry.getBlockID()));
+	}
+	
+	public static Header make(SparseMatrix<Block> grid)
 	{
         Point3i lower = new Point3i();
         Point3i upper = new Point3i();
@@ -88,6 +96,7 @@ public class HeaderLogic
                 entry = new BlockEntry();
                 entry.setBlockID(b.getBlockID());
                 entry.setBlockQuantity(0);
+                manifest.put(b.getBlockID(), entry);
             }
             entry.setBlockQuantity(entry.getBlockQuantity() + 1);
         }
@@ -95,8 +104,8 @@ public class HeaderLogic
 	    Header header = new Header();
 	    header.setUnknown1(0);
 	    header.setUnknown2(0);
-	    header.setUpperBound(new Vector3f(upper.x, upper.y, upper.z));
-        header.setLowerBound(new Vector3f(lower.x, lower.y, lower.z));
+        header.setLowerBound(new Vector3f(lower.x - 8, lower.y - 8, lower.z - 8));
+        header.setUpperBound(new Vector3f(upper.x - 8, upper.y - 8, upper.z - 8));
 	    header.setManifest(manifest.values().toArray(new BlockEntry[0]));
 	    return header;
 	}
